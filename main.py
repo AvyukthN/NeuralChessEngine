@@ -46,8 +46,40 @@ def drawPieces(screen, bs):
             if boardState[i][j] != "--":
                 screen.blit(IMAGES[boardState[i][j]], (j * SQUARE_SIZE, i * SQUARE_SIZE))
 
-def vaidMove(moveArr):
-    pass
+def get_pieceState(bs):
+    boardState = bs.board
+    pieces = []
+
+    for i in range(len(boardState)):
+        for j in range(len(boardState[i])):
+            if boardState[i][j] != "--":
+                pieces.append([boardState[i][j], [i, j]])
+    
+    return pieces
+
+def generateValidMoves(bs):
+    pieces = get_pieceState(bs)
+    moves = [] 
+
+    for piece in pieces:
+        location = piece[1]
+        if piece[0][1] == "P":
+            if piece[0][0] == "w":
+                if location[0] == 6: 
+                    moves.append([location, [(location[0] - 2), location[1]]])
+            if piece[0][0] == "b":
+                if location[0] == 1:
+                    moves.append([location, [(location[0] + 2), location[1]]])
+                if location[0] != 1 and((bs.board[(location[0] + 1)][location[1] + 1] == "--") and (bs.board[location[0] + 1][location[1] - 1] == "--")):
+                    moves.append([location, [(location[0] + 1), location[1]]])
+                if location[0] != 1 and ((bs.board[(location[0] + 1)][location[1] + 1] != "--") or (bs.board[location[0] + 1][location[1] - 1] != "--")):
+                    if (bs.board[(location[0] + 1)][location[1] + 1] != "--"):
+                        moves.append([(location[0] + 1), (location[1] + 1)])
+                    if (bs.board[(location[0] + 1)][location[1] - 1] != "--"):
+                        moves.append([(location[0] + 1), (location[1] - 1)])
+    return moves
+
+
 
 def main():
     screen = pygame.display.set_mode((WIDTH, WIDTH))
@@ -82,6 +114,9 @@ def main():
                 if len(playerClicks) == 2 and (playerClicks[1] == playerClicks[0]):
                     SquareSelected = ()
                     playerClicks[1] = []
+
+                validMoves = generateValidMoves(bs)
+                print(len(validMoves))
         
                 if (len(playerClicks) == 2 and (playerClicks[0] != playerClicks[1])): 
                     # move
