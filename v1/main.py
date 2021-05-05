@@ -61,23 +61,71 @@ def generateValidMoves(bs):
     pieces = get_pieceState(bs)
     moves = [] 
 
-    for piece in pieces:
-        location = piece[1]
-        if piece[0][1] == "P":
-            if piece[0][0] == "w":
-                if location[0] == 6: 
-                    moves.append([location, [(location[0] - 2), location[1]]])
-            if piece[0][0] == "b":
-                if location[0] == 1:
-                    moves.append([location, [(location[0] + 2), location[1]]])
-                if location[0] != 1 and((bs.board[(location[0] + 1)][location[1] + 1] == "--") and (bs.board[location[0] + 1][location[1] - 1] == "--")):
-                    moves.append([location, [(location[0] + 1), location[1]]])
-                if location[0] != 1 and ((bs.board[(location[0] + 1)][location[1] + 1] != "--") or (bs.board[location[0] + 1][location[1] - 1] != "--")):
-                    if (bs.board[(location[0] + 1)][location[1] + 1] != "--"):
-                        moves.append([(location[0] + 1), (location[1] + 1)])
-                    if (bs.board[(location[0] + 1)][location[1] - 1] != "--"):
-                        moves.append([(location[0] + 1), (location[1] - 1)])
-    return moves
+    # for piece in pieces:
+    #     location = piece[1]
+    #     pieceName = piece[0]
+    #     if pieceName[1] == "P":
+    #         if pieceName[0] == "w":
+    #             if location[1] != 0 and location[1] != 7:
+    #                 topLeft = [location[0] - 1, location[1] - 1]
+    #                 topRight = [location[0] - 1, location[1] + 1]
+    #             elif location[1] == 0:
+    #                 topRight = [location[0] - 1, location[1] + 1]
+    #             elif location[1] == 7:
+    #                 topLeft = [location[0] - 1, location[1] - 1]
+
+    #             forward = [location[0] -1, location[1]]
+
+    #             if location[0] == 6: 
+    #                 moves.append([location, [(location[0] - 2), location[1]]])
+
+    #             try:
+    #                 if topLeft != "--":
+    #                     moves.append([location, topLeft])
+    #             except:
+    #                 pass
+    #             try:
+    #                 if topRight != "--":
+    #                     moves.append([location, topRight])
+    #             except:
+    #                 pass
+    #             try:
+    #                 if forward == "--":
+    #                     moves.append([location, forward])
+    #             except:
+    #                 pass
+
+    #         if pieceName[0] == "b":
+    #             if location[1] != 0 and location[1] != 7:
+    #                 topLeft = [location[0] + 1, location[1] - 1]
+    #                 topRight = [location[0] + 1, location[1] + 1]
+    #             elif location[1] == 0:
+    #                 topRight = [location[0] + 1, location[1] + 1]
+    #             elif location[1] == 7:
+    #                 topLeft = [location[0] + 1, location[1] - 1]
+
+    #             forward = [location[0] + 1, location[1]]
+
+    #             if location[0] == 1:
+    #                 moves.append([location, [(location[0] + 2), location[1]]])
+                
+    #             try:
+    #                 if topLeft != "--":
+    #                     moves.append([location, topLeft])
+    #             except:
+    #                 pass
+    #             try:
+    #                 if topRight != "--":
+    #                     moves.append([location, topRight])
+    #             except:
+    #                 pass
+    #             try:
+    #                 if forward == "--":
+    #                     moves.append([location, forward])
+    #             except:
+    #                 pass
+
+    # return moves
 
 
 
@@ -104,6 +152,8 @@ def main():
                 pygame.quit()
                 running == False
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                validMoves = generateValidMoves(bs)
+                print(len(validMoves))
                 location = pygame.mouse.get_pos()
                 col = location[0] // SQUARE_SIZE
                 row = location[1] // SQUARE_SIZE
@@ -115,9 +165,6 @@ def main():
                     SquareSelected = ()
                     playerClicks[1] = []
 
-                validMoves = generateValidMoves(bs)
-                print(len(validMoves))
-        
                 if (len(playerClicks) == 2 and (playerClicks[0] != playerClicks[1])): 
                     # move
                     if bs.whiteToMove == True:
